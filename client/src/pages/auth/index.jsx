@@ -22,6 +22,8 @@ const AuthPage = () => {
     setSignInFromData,
     signUpFromData,
     setSignUpFromData,
+    handleRegisterUser,
+    handleLoginUser,
   } = useAuthContext();
 
   function handleTabChange(value) {
@@ -45,7 +47,7 @@ const AuthPage = () => {
   }
 
   // console.log(signInFromData)
-  console.log(signUpFromData);
+  // console.log(signUpFromData);
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -81,6 +83,7 @@ const AuthPage = () => {
                   formData={signInFromData}
                   setFormData={setSignInFromData}
                   isButtonDisabled={!checkIfSignInFormIsValid()}
+                  handleSubmit={handleLoginUser}
                 />
               </CardContent>
             </Card>
@@ -100,6 +103,7 @@ const AuthPage = () => {
                   formData={signUpFromData}
                   setFormData={setSignUpFromData}
                   isButtonDisabled={!checkIfSignUpFormIsValid()}
+                  handleSubmit={handleRegisterUser}
                 />
               </CardContent>
             </Card>
