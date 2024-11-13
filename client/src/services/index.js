@@ -20,3 +20,11 @@ export async function checkAuthService() {
 
   return data;
 }
+
+
+// video upload / media serviece
+export async function mediaUploadService(formData) {
+  const { data } = await axiosInstance.post("/media/upload",formData);
+
+  return data;
+}
