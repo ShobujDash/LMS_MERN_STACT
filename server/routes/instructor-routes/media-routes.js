@@ -28,7 +28,7 @@ router.post('/upload',upload.single('file'),async (req,res) => {
 })
 
 
-router.post('/delete/:id',async (req,res) => {
+router.delete('/delete/:id',async (req,res) => {
   try {
     const { id } = req.params;
 
@@ -41,8 +41,8 @@ router.post('/delete/:id',async (req,res) => {
 
     await deleteMeidaFromCloudinary(id)
 
-     res.status(400).json({
-        success: false,
+     res.status(200).json({
+        success: true,
         message:"Assest deleted successfully from cloudinary."
       })
   } catch (error) {
