@@ -4,6 +4,7 @@ import { BrowserRouter } from "react-router-dom";
 import App from "./App.jsx";
 import AuthProvider from "./context/auth-context/index.jsx";
 import InstructorProvider from "./context/intructor-context/index.jsx";
+import StudentProvider from "./context/student-context/index.jsx";
 import "./index.css";
 
 createRoot(document.getElementById("root")).render(
@@ -11,7 +12,9 @@ createRoot(document.getElementById("root")).render(
     <BrowserRouter>
       <AuthProvider>
         <InstructorProvider>
-          <App />
+          <StudentProvider>
+            <App />
+          </StudentProvider>
         </InstructorProvider>
       </AuthProvider>
     </BrowserRouter>

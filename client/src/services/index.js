@@ -60,7 +60,7 @@ export async function addNewCourseService(formData) {
 // get course details
 export async function fetchInstructorCorseDetailsService(id) {
   const { data } = await axiosInstance.get(
-    `/instructor/course/details/${id}`
+    `/instructor/course/get/details/${id}`
   );
 
   return data;
@@ -71,3 +71,18 @@ export async function updateCorseByIdService(id,formData) {
 
   return data;
 } 
+
+
+// bulk multiple video upload / media serviece
+export async function mediaBulkUploadService(formData, onProgressCallback) {
+  const { data } = await axiosInstance.post("/media/bulk-upload", formData, {
+    onUploadProgress: (progressEvent) => {
+      const percentCompleted = Math.round(
+        (progressEvent.loaded * 100) / progressEvent.total
+      );
+      onProgressCallback(percentCompleted);
+    },
+  });
+
+  return data;
+}

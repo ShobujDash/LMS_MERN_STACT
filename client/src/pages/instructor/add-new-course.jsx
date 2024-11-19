@@ -9,9 +9,12 @@ import {
 } from "@/config";
 import { useAuthContext } from "@/context/auth-context";
 import { useInstructorContext } from "@/context/intructor-context";
-import { addNewCourseService } from "@/services";
+import { addNewCourseService, fetchInstructorCorseDetailsService, updateCorseByIdService } from "@/services";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@radix-ui/react-tabs";
+import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+
+
 
 const AddNewCoursePage = () => {
   const {
@@ -22,10 +25,11 @@ const AddNewCoursePage = () => {
     currentEditedCorseId,
     setCurrentEditedCorseId,
   } = useInstructorContext();
+  const [currentEditedCourseId,setCurrentEditedCourseId] = [null]
   const { auth } = useAuthContext();
   const navigate = useNavigate();
   const params = useParams()
-  console.log(params)
+
 
   function isEmpty(value) {
     if (Array.isArray(value)) {
@@ -72,14 +76,49 @@ const AddNewCoursePage = () => {
       isPublished: true,
     };
 
-    const respones = await addNewCourseService(courseFinalFromData);
+    const respones =
+      currentEditedCorseId !== null
+        ? await updateCorseByIdService(
+            currentEditedCorseId,
+            courseFinalFromData
+          )
+        : await addNewCourseService(courseFinalFromData);
 
     if (respones?.success) {
       setCourseCurriculumFormData(courseCurriculumInitialFormData);
       setCourseLandingFormData(courseLandingInitialFormData);
       navigate(-1);
+      setCurrentEditedCorseId(null)
     }
   };
+
+  async function fetchCurrentCourseDetails() {
+    const response = await fetchInstructorCorseDetailsService(currentEditedCorseId)
+    console.log(response)
+
+    if (response?.success) {
+      const setCourseFommData = Object.keys(courseLandingInitialFormData).reduce((acc, currValue) => {
+        acc[currValue] = response?.data[currValue] || courseLandingInitialFormData[currValue]
+
+        return acc
+      }, {})
+      
+      console.log("setCourseFommData",response?.data?.curriculum)
+      setCourseLandingFormData(setCourseFommData)
+      setCourseCurriculumFormData(response?.data?.curriculum);
+    }
+  }
+
+  useEffect(() => {
+    if(currentEditedCorseId !==null) fetchCurrentCourseDetails()
+  },[currentEditedCorseId])
+ 
+  useEffect(() => {
+    if(params?.courseId) setCurrentEditedCorseId(params?.courseId);
+
+  },[params?.courseId])
+
+
 
   return (
     <div className="container mx-auto p-4">
@@ -129,3 +168,4 @@ const AddNewCoursePage = () => {
 };
 
 export default AddNewCoursePage;
+  
